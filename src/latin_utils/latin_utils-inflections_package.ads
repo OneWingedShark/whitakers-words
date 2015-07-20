@@ -14,8 +14,13 @@
 -- All parts of the WORDS system, source code and data files, are made freely
 -- available to anyone who wishes to use them, for whatever purpose.
 
-with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Direct_IO;
+with
+Ada.Text_IO,
+Ada.Direct_IO;
+
+use
+Ada.Text_IO;
+
 package Latin_Utils.Inflections_Package is
 
    ---------------------------------------------------------------------------
@@ -57,7 +62,7 @@ package Latin_Utils.Inflections_Package is
    Null_Meaning_Type : constant Meaning_Type := (others => ' ');
 
    type Part_Of_Speech_Type is
-     (X,         --  all, none, or unknown
+    (X,         --  all, none, or unknown
      N,         --  Noun
      Pron,      --  PRONoun
      Pack,      --  PACKON -- artificial for code
@@ -74,7 +79,7 @@ package Latin_Utils.Inflections_Package is
      Tackon,    --  TACKON --  artificial for code
      Prefix,    --  PREFIX --  here artificial for code
      Suffix     --  SUFFIX --  here artificial for code
-     );
+    );
 
    package Part_Of_Speech_Type_IO is
       new Ada.Text_IO.Enumeration_IO (Part_Of_Speech_Type);
@@ -116,19 +121,19 @@ package Latin_Utils.Inflections_Package is
    ---------------------------------------------------------------------------
 
    type Gender_Type is
-     (X, --  all, none, or unknown
+    (X, --  all, none, or unknown
      M, --  Masculine
      F, --  Feminine
      N, --  Neuter
      C  --  Common (masculine and/or feminine)
-     );
+    );
 
    package Gender_Type_IO is new Ada.Text_IO.Enumeration_IO (Gender_Type);
 
    ---------------------------------------------------------------------------
 
    type Case_Type is
-     (X,   --  all, none, or unknown
+    (X,   --  all, none, or unknown
      Nom, --  NOMinative
      Voc, --  VOCative
      Gen, --  GENitive
@@ -136,17 +141,17 @@ package Latin_Utils.Inflections_Package is
      Dat, --  DATive
      Abl, --  ABLative
      Acc  --  ACCusitive
-     );
+    );
 
    package Case_Type_IO is new Ada.Text_IO.Enumeration_IO (Case_Type);
 
    ---------------------------------------------------------------------------
 
    type Number_Type is
-     (X, --  all, none, or unknown
+    (X, --  all, none, or unknown
      S, --  Singular
      P  --  Plural
-     );
+    );
 
    package Number_Type_IO is new Ada.Text_IO.Enumeration_IO (Number_Type);
 
@@ -158,11 +163,11 @@ package Latin_Utils.Inflections_Package is
    ---------------------------------------------------------------------------
 
    type Comparison_Type is
-     (X,    --  all, none, or unknown
+    (X,    --  all, none, or unknown
      Pos,  --  POSitive
      Comp, --  COMParative
      Super --  SUPERlative
-     );
+    );
 
    package Comparison_Type_IO is new
      Ada.Text_IO.Enumeration_IO (Comparison_Type);
@@ -177,12 +182,12 @@ package Latin_Utils.Inflections_Package is
    ---------------------------------------------------------------------------
 
    type Numeral_Sort_Type is
-     (X,     --  all, none, or unknown
+    (X,     --  all, none, or unknown
      Card,  --  CARDinal
      Ord,   --  ORDinal
      Dist,  --  DISTributive
      Adverb --  numeral ADVERB
-     );
+    );
 
    package Numeral_Sort_Type_IO is
       new Ada.Text_IO.Enumeration_IO (Numeral_Sort_Type);
@@ -190,37 +195,37 @@ package Latin_Utils.Inflections_Package is
    ---------------------------------------------------------------------------
 
    type Tense_Type is
-     (X,    --  all, none, or unknown
+    (X,    --  all, none, or unknown
      Pres, --  PRESent
      Impf, --  IMPerFect
      Fut,  --  FUTure
      Perf, --  PERFect
      Plup, --  PLUPerfect
      Futp  --  FUTure Perfect
-     );
+    );
 
    package Tense_Type_IO is new Ada.Text_IO.Enumeration_IO (Tense_Type);
 
    ---------------------------------------------------------------------------
 
    type Voice_Type is
-     (X,     --  all, none, or unknown
+    (X,      --  all, none, or unknown
      Active, --  ACTIVE
      Passive --  PASSIVE
-     );
+    );
 
    package Voice_Type_IO is new Ada.Text_IO.Enumeration_IO (Voice_Type);
 
    ---------------------------------------------------------------------------
 
    type Mood_Type is
-     (X,  --  all, none, or unknown
+    (X,   --  all, none, or unknown
      Ind, --  INDicative
      Sub, --  SUBjunctive
      Imp, --  IMPerative
      Inf, --  INFinative
      Ppl  --  ParticiPLe
-     );
+    );
 
    package Mood_Type_IO is new Ada.Text_IO.Enumeration_IO (Mood_Type);
 
@@ -253,7 +258,7 @@ package Latin_Utils.Inflections_Package is
    ---------------------------------------------------------------------------
 
    type Noun_Kind_Type is
-      (X, --  unknown, nondescript
+     (X,  --  unknown, nondescript
       S,  --  Singular "only"           --  not really used
       M,  --  plural or Multiple "only" --  not really used
       A,  --  Abstract idea
@@ -263,14 +268,14 @@ package Latin_Utils.Inflections_Package is
       T,  --  a Thing
       L,  --  Locale, name of country/city
       W   --  a place Where
-      );
+     );
 
    package Noun_Kind_Type_IO is new Ada.Text_IO.Enumeration_IO (Noun_Kind_Type);
 
    ---------------------------------------------------------------------------
 
    type Pronoun_Kind_Type is
-      (X,      --  unknown, nondescript
+     (X,      --  unknown, nondescript
       Pers,   --  PERSonal
       Rel,    --  RELative
       Reflex, --  REFLEXive
@@ -278,7 +283,7 @@ package Latin_Utils.Inflections_Package is
       Interr, --  INTERRogative
       Indef,  --  INDEFinite
       Adject  --  ADJECTival
-      );
+     );
 
    package Pronoun_Kind_Type_IO is
       new Ada.Text_IO.Enumeration_IO (Pronoun_Kind_Type);
@@ -292,7 +297,7 @@ package Latin_Utils.Inflections_Package is
    ---------------------------------------------------------------------------
 
    type Verb_Kind_Type is
-      (X,        --  all, none, or unknown
+     (X,         --  all, none, or unknown
       To_Be,     --  only the verb TO BE (esse)
       To_Being,  --  compounds of the verb to be (esse)
       Gen,       --  verb taking the GENitive
@@ -308,7 +313,7 @@ package Latin_Utils.Inflections_Package is
       --  (perfect passive has active force)
       Perfdef    --  PERFect DEFinite verb
       --  having only perfect stem, but with present force
-      );
+     );
 
    package Verb_Kind_Type_IO is
       new Ada.Text_IO.Enumeration_IO (Verb_Kind_Type);
@@ -762,7 +767,7 @@ package Latin_Utils.Inflections_Package is
      d,   --  late        --  Late, post-classical (3rd-5th centuries)
      e,   --  later       --  Latin not in use in Classical times (6-10), X'ian
      f,   --  medieval    --  Medieval (11th-15th centuries)
-     g,   --  scholar     --  Latin post 15th - Scholarly/Scientific   (16-18)
+     g,   --  scholar     --  Latin post 15th - Scholarly/Scientific (16-18)
      h    --  modern      --  Coined recently, words for new things (19-20)
                     );
    package Age_Type_IO is new Ada.Text_IO.Enumeration_IO (Age_Type);

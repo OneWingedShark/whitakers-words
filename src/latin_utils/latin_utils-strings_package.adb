@@ -14,28 +14,17 @@
 -- All parts of the WORDS system, source code and data files, are made freely
 -- available to anyone who wishes to use them, for whatever purpose.
 
-with Ada.Characters.Handling;
-with Ada.Strings.Fixed;
-with Ada.Text_IO; use Ada.Text_IO;
+pragma Ada_2012;
+
+with
+Ada.Characters.Handling,
+Ada.Strings.Fixed,
+Ada.Text_IO;
+
+use
+Ada.Text_IO;
+
 package body Latin_Utils.Strings_Package is
-
-   ---------------------------------------------------------------------------
-
-   function Max (A, B : Integer) return Integer is
-   begin
-      if A >= B then
-         return A;
-      end if;
-      return B;
-   end Max;
-
-   function Min (A, B : Integer) return Integer is
-   begin
-      if A <= B then
-         return A;
-      end if;
-      return B;
-   end Min;
 
    ---------------------------------------------------------------------------
 
@@ -57,10 +46,7 @@ package body Latin_Utils.Strings_Package is
       (Source : in String;
        Side   : in Trim_End := Both
       ) return String
-   is
-   begin
-      return Ada.Strings.Fixed.Trim (Source, Ada.Strings.Trim_End (Side));
-   end Trim;
+       renames Ada.Strings.Fixed.Trim;
 
    ---------------------------------------------------------------------------
 
@@ -77,37 +63,45 @@ package body Latin_Utils.Strings_Package is
    procedure Get_Non_Comment_Line
       (File : in  Ada.Text_IO.File_Type;
        Item : out String;
-       Last : out Integer
+       Last : out Natural
       ) is
-      Line  : String (1 .. 250) := (others => ' ');
-      Length, LX : Integer := 0;
+      Noncomment_Line   : String renames Get_Non_Comment_Line (File);
+      Noncomment_Length : constant Natural := Noncomment_Line'Length;
       -- LX is Line (Line'First .. Start_Of_Comment)'Length
+      subtype Index is Positive range
+        Item'First .. Positive'Pred (Item'First + Noncomment_Length);
    begin
-      Last := 0;
+      Item (Index) := Noncomment_Line;
+      Last := Noncomment_Length; --Possible off-by-one error here; could be the
+                                 -- Index'Last that we want to return... depends
+                                 -- on how the function is intended to be used.
+   end Get_Non_Comment_Line;
 
-      File_Loop :
-      while not Ada.Text_IO.End_Of_File (File) loop
-         --  Loop until data - Finish on EOF
-         Ada.Text_IO.Get_Line (File, Line, Length);
-         if Head (Trim (Line), 250)(1 .. 2) = "  "  or
-           Head (Trim (Line), 250)(1 .. 2) = "--"
-         then
-            null;
-         else
-            -- Search for start of comment in line (if any).
-            LX := Ada.Strings.Fixed.Index (Line, "--", Line'First);
-            if LX /= 0 then
-               LX := LX - 1;
-            else
-               LX := Length;
+   function  Get_Non_Comment_Line
+     (File : in  Ada.Text_IO.File_Type
+     ) return String is
+   begin
+      loop
+         declare
+            Line    : String renames Ada.Text_IO.Get_Line (File);
+            Start   : String renames Head (Trim (Line), 250);
+            Comment : constant Boolean := Start (1 .. 2) = "--";
+            Blank   : constant Boolean := Start (1 .. 2) = "  ";
+         begin
+            -- Since both cannot be true, Comment = Blank is only true
+            -- when both are false.
+            if Comment = Blank then
+               declare
+                  -- Search for start of comment in line (if any).
+                  Stop : Natural renames
+                    Ada.Strings.Fixed.Index (Line, "--", Line'First);
+                  subtype Valid is Positive range Line'First .. Stop;
+               begin
+                  return Result : constant String := Line (Valid);
+               end;
             end if;
-
-            exit File_Loop;
-         end if;
-      end loop File_Loop;
-
-      Item (Item'First .. LX) := Line (1 .. LX);
-      Last := LX;
+         end;
+      end loop;
    end Get_Non_Comment_Line;
 
    ---------------------------------------------------------------------------

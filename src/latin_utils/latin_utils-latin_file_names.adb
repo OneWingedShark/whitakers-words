@@ -21,7 +21,7 @@ package body Latin_Utils.Latin_File_Names is
       --  One that has a name, a '.', and an extension no longer than 3 chars
       --  Arbitarily, we also truncate the NAME to 8 Characters
       --  To port to another system, one needs to do this function appropriately
-      name_length : Integer := name'Length;
+      name_length      : Integer := name'Length;
       extension_length : Integer := extension'Length;
    begin
       if name_length >= 8  then

@@ -21,20 +21,14 @@
 
    -- TODO: Write testbenches for every subprogram in this package.
 
-with Ada.Strings;
-with Ada.Text_IO;
+with
+Ada.Strings,
+Ada.Text_IO;
+
 package Latin_Utils.Strings_Package is
+   use Ada.Strings;
 
-   ---------------------------------------------------------------------------
-   -- Correct values: Left, Right, Both
-   type Trim_End is new Ada.Strings.Trim_End;
-
-   Null_String : constant String (2 .. 1) := (others => ' ');
-
-   ---------------------------------------------------------------------------
-   -- NOTE: Why are there numerical functions in String package?
-   function Max (A, B : Integer) return Integer;
-   function Min (A, B : Integer) return Integer;
+   Null_String : constant String;
 
    ---------------------------------------------------------------------------
 
@@ -64,9 +58,15 @@ package Latin_Utils.Strings_Package is
    procedure Get_Non_Comment_Line
       (File : in  Ada.Text_IO.File_Type;
        Item : out String;
-       Last : out Integer
+       Last : out Natural
       );
 
-   ---------------------------------------------------------------------------
+   -- Reads a noncomment line of text from the indicated file.
+   function  Get_Non_Comment_Line
+     (File : in  Ada.Text_IO.File_Type
+     ) return String;
 
+   ---------------------------------------------------------------------------
+private
+   Null_String : constant String (2 .. 1) := (others => ' ');
 end Latin_Utils.Strings_Package;
